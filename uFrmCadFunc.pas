@@ -1,4 +1,4 @@
-unit uFrmCadFunc;
+﻿unit uFrmCadFunc;
 
 interface
 
@@ -10,11 +10,14 @@ type
   TfrmCadFunc = class(TForm)
     lblNome: TLabel;
     edtNome: TEdit;
-    lbeCPF: TLabeledEdit;
     rdgGenero: TRadioGroup;
     lbeCargo: TLabeledEdit;
     btnSalvar: TButton;
+    lblCPF: TLabel;
+    mskCPF: TMaskEdit;
     procedure btnSalvarClick(Sender: TObject);
+    procedure edtNomeKeyPress(Sender: TObject; var Key: Char);
+    procedure lbeCargoKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     FOriginalNome: string;
@@ -35,16 +38,16 @@ implementation
 
 {$R *.dfm}
 
-uses uDmBanco;
+uses uDmBanco, FireDAC.Comp.Client, FireDAC.Stan.Param;
 
 procedure TfrmCadFunc.CarregarDados;
 begin
   if idFuncionario > 0 then
   begin
     edtNome.Text := DataModule1.qrtBuscarFunc.FieldByName('nome').AsString;
-    lbeCPF.Text := DataModule1.qrtBuscarFunc.FieldByName('cpf').AsString;
+    mskCPF.Text := DataModule1.qrtBuscarFunc.FieldByName('cpf').AsString;
     lbeCargo.Text := DataModule1.qrtBuscarFunc.FieldByName('cargo').AsString;
-    
+
     if DataModule1.qrtBuscarFunc.FieldByName('genero').AsString = 'M' then
       rdgGenero.ItemIndex := 0
     else if DataModule1.qrtBuscarFunc.FieldByName('genero').AsString = 'F' then
@@ -54,7 +57,7 @@ begin
 
     // Guarda estado original para comparação
     FOriginalNome := edtNome.Text;
-    FOriginalCPF := lbeCPF.Text;
+    FOriginalCPF := mskCPF.Text;
     FOriginalCargo := lbeCargo.Text;
     FOriginalGenero := rdgGenero.ItemIndex;
     
@@ -63,25 +66,61 @@ begin
   else
   begin
     edtNome.Clear;
-    lbeCPF.Clear;
+    mskCPF.Clear;
     lbeCargo.Clear;
     rdgGenero.ItemIndex := -1;
     btnSalvar.Caption := 'Cadastrar';
   end;
 end;
 
+procedure TfrmCadFunc.edtNomeKeyPress(Sender: TObject; var Key: Char);
+begin
+  Key := UpCase(Key);
+end;
+
 function TfrmCadFunc.HouveAlteracoes: Boolean;
 begin
   Result := (edtNome.Text <> FOriginalNome) or
-            (lbeCPF.Text <> FOriginalCPF) or
+            (mskCPF.Text <> FOriginalCPF) or
             (lbeCargo.Text <> FOriginalCargo) or
             (rdgGenero.ItemIndex <> FOriginalGenero);
+end;
+
+procedure TfrmCadFunc.lbeCargoKeyPress(Sender: TObject; var Key: Char);
+begin
+  Key := UpCase(Key);
 end;
 
 procedure TfrmCadFunc.btnSalvarClick(Sender: TObject);
 var
   vGenero: string;
+  vQry: TFDQuery;
 begin
+  // Validação básica: CPF preenchido
+  if Trim(mskCPF.Text) = '   .   .   -  ' then
+  begin
+    ShowMessage('Por favor, informe o CPF.');
+    Exit;
+  end;
+
+  // Verificação de CPF Duplicado
+  vQry := TFDQuery.Create(nil);
+  try
+    vQry.Connection := DataModule1.FDConnection1;
+    vQry.SQL.Text := 'SELECT id FROM funcionario WHERE cpf = :cpf AND id <> :id';
+    vQry.ParamByName('cpf').AsString := mskCPF.Text;
+    vQry.ParamByName('id').AsInteger := idFuncionario;
+    vQry.Open;
+
+    if not vQry.IsEmpty then
+    begin
+      ShowMessage('Este CPF já está cadastrado para outro funcionário!');
+      Exit;
+    end;
+  finally
+    vQry.Free;
+  end;
+
   // Se for edição e não houve alteração, apenas fecha
   if (idFuncionario > 0) and (not HouveAlteracoes) then
   begin
@@ -103,7 +142,7 @@ begin
       // Lógica de Inserção
       DataModule1.FDConnection1.ExecSQL(
         'INSERT INTO funcionario (nome, cpf, cargo, genero) VALUES (:nome, :cpf, :cargo, :genero)',
-        [edtNome.Text, lbeCPF.Text, lbeCargo.Text, vGenero]
+        [edtNome.Text, mskCPF.Text, lbeCargo.Text, vGenero]
       );
       ShowMessage('Funcionário cadastrado com sucesso!');
     end
@@ -112,7 +151,7 @@ begin
       // Lógica de Atualização
       DataModule1.FDConnection1.ExecSQL(
         'UPDATE funcionario SET nome = :nome, cpf = :cpf, cargo = :cargo, genero = :genero WHERE id = :id',
-        [edtNome.Text, lbeCPF.Text, lbeCargo.Text, vGenero, idFuncionario]
+        [edtNome.Text, mskCPF.Text, lbeCargo.Text, vGenero, idFuncionario]
       );
       ShowMessage('Funcionário atualizado com sucesso!');
     end;

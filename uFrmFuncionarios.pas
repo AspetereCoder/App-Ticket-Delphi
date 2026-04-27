@@ -24,6 +24,7 @@ type
     procedure btnExcluirClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnInspecionarClick(Sender: TObject);
+    procedure edtBuscarFuncKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure AtualizarBotoes;
@@ -113,6 +114,12 @@ begin
     DataModule1.qrtBuscarFunc.Refresh;
     AtualizarBotoes;
   end;
+end;
+
+procedure TfrmFuncionarios.edtBuscarFuncKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  Key := UpCase(Key);
 end;
 
 procedure TfrmFuncionarios.FormShow(Sender: TObject);

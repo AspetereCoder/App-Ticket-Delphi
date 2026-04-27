@@ -73,7 +73,7 @@ begin
     'CREATE TABLE IF NOT EXISTS funcionario (' +
     '  id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
     '  nome TEXT NOT NULL, ' +
-    '  cpf TEXT, ' +
+    '  cpf TEXT UNIQUE, ' +
     '  cargo TEXT, ' +
     '  genero TEXT, ' +
     '  dataCriacao DATETIME DEFAULT CURRENT_TIMESTAMP, ' +

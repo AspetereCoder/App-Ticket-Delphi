@@ -19,21 +19,28 @@ object frmCadFunc: TfrmCadFunc
     Height = 15
     Caption = 'Nome:'
   end
+  object lblCPF: TLabel
+    Left = 48
+    Top = 64
+    Width = 24
+    Height = 15
+    Caption = 'CPF:'
+  end
   object edtNome: TEdit
     Left = 90
     Top = 29
     Width = 175
     Height = 23
     TabOrder = 0
+    OnKeyPress = edtNomeKeyPress
   end
-  object lbeCPF: TLabeledEdit
+  object mskCPF: TMaskEdit
     Left = 48
     Top = 80
     Width = 121
     Height = 23
-    EditLabel.Width = 24
-    EditLabel.Height = 15
-    EditLabel.Caption = 'CPF:'
+    EditMask = '999.999.999-99;0;_'
+    MaxLength = 14
     TabOrder = 1
     Text = ''
   end
@@ -58,6 +65,7 @@ object frmCadFunc: TfrmCadFunc
     EditLabel.Caption = 'Cargo'
     TabOrder = 3
     Text = ''
+    OnKeyPress = lbeCargoKeyPress
   end
   object btnSalvar: TButton
     Left = 136
