@@ -28,11 +28,17 @@ Para que o sistema funcione, é **obrigatório** gerar o arquivo do banco de dad
 3. O script criará o arquivo `banco_dados.db`. 
 4. **Mova ou copie** o arquivo `banco_dados.db` para a pasta do executável (ex: `Win32/Debug/`) para que o Delphi o localize.
 
-## 📦 Como Compilar
+## 📦 Como Compilar - passo a passo
 
-1. Abra o arquivo `AppTicket.dproj` no RAD Studio.
-2. Certifique-se de que o arquivo `.db` gerado está na pasta correta do binário.
-3. Pressione `F9` para compilar e rodar.
+1. Clone o projeto em sua máquina por meio do seguinte comando:
+``` bash
+git clone https://github.com/AspetereCoder/App-Ticket-Delphi.git
+```
+2. Abra a pasta do projeto
+3. Rode o script `create_db.py` conforme já dito anteriormente.
+4. Abra o arquivo `AppTicket.dproj` no RAD Studio.
+5. Certifique-se de que o arquivo `.db` gerado está na pasta correta do binário.
+6. Pressione `F9` para compilar e rodar.
 
 ## 📄 Estrutura do Banco
 
