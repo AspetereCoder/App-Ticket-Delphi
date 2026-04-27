@@ -1,0 +1,27 @@
+# Delphi GitIgnore
+# Ignore compilados e arquivos temporários
+__history/
+__recovery/
+Win32/
+Win64/
+*.dcu
+*.identcache
+*.local
+*.stat
+*.res
+*.otares
+*.~*
+*.dsk
+*.dof
+*.cfg
+*.o
+*.obj
+
+# não ignorar o arquivo de recurso principal
+!AppTicket.res
+
+# ignorar banco de dados (será gerado no script)
+banco_dados.db
+
+# enviar o script de criação no git
+!create_db.py
