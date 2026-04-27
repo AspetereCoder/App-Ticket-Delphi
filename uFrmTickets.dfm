@@ -68,6 +68,7 @@ object frmTickets: TfrmTickets
     Width = 241
     Height = 23
     TabOrder = 1
+    OnKeyPress = edtBuscarFuncKeyPress
   end
   object btnBuscarFunc: TButton
     Left = 446

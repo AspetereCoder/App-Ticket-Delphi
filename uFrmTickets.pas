@@ -20,6 +20,7 @@ type
     procedure btnBuscarFuncClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
+    procedure edtBuscarFuncKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure AtualizarBotoes;
@@ -106,6 +107,11 @@ begin
     DataModule1.qrtTickets.Refresh;
     AtualizarBotoes;
   end;
+end;
+
+procedure TfrmTickets.edtBuscarFuncKeyPress(Sender: TObject; var Key: Char);
+begin
+  Key := UpCase(Key);
 end;
 
 procedure TfrmTickets.FormShow(Sender: TObject);
