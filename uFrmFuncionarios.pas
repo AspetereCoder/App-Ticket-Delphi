@@ -93,7 +93,11 @@ begin
       DataModule1.FDConnection1.ExecSQL('DELETE FROM funcionario WHERE id = :id', [vId]);
       
       DataModule1.qrtBuscarFunc.Refresh;
-      DataModule1.qrtTickets.Refresh; // Atualiza lista de tickets se estiver aberta
+      
+      // Só atualiza os tickets se a query estiver aberta (evita erro de dataset fechado)
+      if DataModule1.qrtTickets.Active then
+        DataModule1.qrtTickets.Refresh;
+        
       AtualizarBotoes;
       
       ShowMessage('Funcionário excluído com sucesso!');
